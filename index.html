@@ -1,154 +1,83 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BoostedCampus Dashboard</title>
 <style>
-:root {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --accent: #3b82f6;
-  --accent-glow: rgba(59,130,246,0.4);
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-}
-
-* { box-sizing: border-box; }
-body { margin:0; font-family: Inter, sans-serif; background: var(--bg); color: var(--text); }
-header { padding: 20px 30px; background: #0b1220; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
-h1 { margin:0; font-size:22px; letter-spacing:0.5px; }
-button { background: var(--accent); border:none; padding:10px 16px; border-radius:8px; color:white; font-weight:600; cursor:pointer; box-shadow:0 0 15px var(--accent-glow); transition:.2s; }
-button:hover { transform: translateY(-2px); }
-.container { padding:30px; display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
-.card { background: var(--card); border-radius:16px; padding:20px; box-shadow:0 0 0 1px #243041; transition:.2s; }
-.card:hover { box-shadow:0 0 20px var(--accent-glow); transform: translateY(-3px); }
-.course-title { font-size:18px; font-weight:700; margin-bottom:10px; }
-.grade { font-size:28px; font-weight:800; margin:10px 0; }
-.assignment-group { margin-top:12px; padding:10px; background:#111827; border-radius:10px; font-size:14px; }
-.muted { color: var(--muted); font-size:13px; }
-.login-screen { position: fixed; inset:0; background:#0f172a; display:flex; justify-content:center; align-items:center; }
-.login-box { background: var(--card); padding:40px; border-radius:16px; width:400px; box-shadow:0 0 25px rgba(0,0,0,0.4); }
-input { width:100%; padding:12px; margin:8px 0 16px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:white; }
+  body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+  #controls { margin-bottom: 20px; }
+  select { padding: 5px; }
+  .course { background: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🚀 BoostedCampus</h1>
-  <button onclick="refreshData()">Refresh</button>
-</header>
+<h1>🚀 BoostedCampus</h1>
 
-<div class="container" id="courses"></div>
-
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <h2>Connect to Canvas</h2>
-    <label>Canvas Domain</label>
-    <input id="domain" placeholder="yourschool.instructure.com" />
-    <label>Access Token</label>
-    <input id="token" type="password" placeholder="Paste Canvas API Token" />
-    <button onclick="connect()">Connect</button>
-  </div>
+<div id="controls">
+  <label for="statusFilter">Show courses:</label>
+  <select id="statusFilter">
+    <option value="all">All Courses</option>
+    <option value="active">Active Courses</option>
+    <option value="old">Old Courses</option>
+  </select>
 </div>
 
-<script>
-let canvasDomain = "";
-let canvasToken = "";
+<div id="coursesContainer">Loading courses...</div>
 
-const query = `
-query MyQuery {
+<script>
+const canvasDomain = "yourschool.instructure.com"; // replace
+const canvasToken = "YOUR_CANVAS_TOKEN"; // replace
+const query = `query {
   allCourses {
     name
-    imageUrl
-    assignmentGroups {
-      name
-      position
-      state
-      gradesConnection {
-        edges {
-          node {
-            currentGrade
-            currentScore
-            unpostedCurrentGrade
-            unpostedCurrentScore
-          }
-        }
-      }
-    }
+    state
   }
-}
-`;
+}`;
 
-function connect() {
-  canvasDomain = document.getElementById("domain").value.trim();
-  canvasToken = document.getElementById("token").value.trim();
-  if (!canvasDomain || !canvasToken) { alert("Enter domain and token."); return; }
-  document.getElementById("loginScreen").style.display = "none";
-  fetchData();
-}
-
-function refreshData() { fetchData(); }
-
-async function fetchData() {
-  const container = document.getElementById("courses");
-  container.innerHTML = "Loading...";
-
-  try {
-    // Use Vercel serverless proxy
-    const res = await fetch("/api/proxy", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ domain: canvasDomain, token: canvasToken, query })
-    });
-
-    const data = await res.json();
-    if(data.errors) {
-      container.innerHTML = "GraphQL Error: " + data.errors[0].message;
-      return;
-    }
-    renderCourses(data.data.allCourses);
-  } catch(err) {
-    container.innerHTML = "Network/CORS Error: " + err.message;
-    console.error(err);
-  }
+async function fetchCourses() {
+  const res = await fetch("/api/proxy", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ domain: canvasDomain, token: canvasToken, query })
+  });
+  const data = await res.json();
+  return data?.data?.allCourses || [];
 }
 
-function renderCourses(courses) {
-  const container = document.getElementById("courses");
+function renderCourses(courses, filter) {
+  const container = document.getElementById("coursesContainer");
   container.innerHTML = "";
 
-  courses.forEach(course => {
-    const card = document.createElement("div");
-    card.className = "card";
+  const filtered = courses.filter(c => {
+    if(filter === "active") return c.state === "active";
+    if(filter === "old") return c.state !== "active";
+    return true; // all
+  });
 
-    const title = document.createElement("div");
-    title.className = "course-title";
-    title.textContent = course.name;
-    card.appendChild(title);
+  if(filtered.length === 0) {
+    container.textContent = "No courses to show.";
+    return;
+  }
 
-    let displayedGrade = "N/A";
-    if(course.assignmentGroups?.length) {
-      const gradeNode = course.assignmentGroups[0]?.gradesConnection?.edges[0]?.node;
-      if(gradeNode?.currentGrade) displayedGrade = gradeNode.currentGrade + "%";
-    }
-
-    const grade = document.createElement("div");
-    grade.className = "grade";
-    grade.textContent = displayedGrade;
-    card.appendChild(grade);
-
-    course.assignmentGroups.forEach(group => {
-      const groupDiv = document.createElement("div");
-      groupDiv.className = "assignment-group";
-      groupDiv.innerHTML = `<strong>${group.name}</strong><br/><span class="muted">State: ${group.state}</span>`;
-      card.appendChild(groupDiv);
-    });
-
-    container.appendChild(card);
+  filtered.forEach(course => {
+    const div = document.createElement("div");
+    div.className = "course";
+    div.textContent = `${course.name} (${course.state})`;
+    container.appendChild(div);
   });
 }
+
+document.getElementById("statusFilter").addEventListener("change", async (e) => {
+  const filter = e.target.value;
+  renderCourses(window.coursesCache, filter);
+});
+
+(async () => {
+  window.coursesCache = await fetchCourses();
+  renderCourses(window.coursesCache, "all");
+})();
 </script>
 
 </body>
