@@ -1,8 +1,6 @@
-// api/proxy.js
-import fetch from "node-fetch";
-
+// api/proxy.js — Vercel native fetch version
 export default async function handler(req, res) {
-  // Allow preflight requests
+  // Handle preflight for CORS
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
@@ -18,6 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Use native fetch (no node-fetch)
     const response = await fetch(`https://${domain}/api/graphql`, {
       method: "POST",
       headers: {
@@ -29,20 +28,18 @@ export default async function handler(req, res) {
 
     const text = await response.text();
 
-    // Try parsing JSON, if fails return raw text for debugging
     try {
       const data = JSON.parse(text);
       res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
       res.json(data);
     } catch (err) {
-      res.status(500).json({ 
+      res.status(500).json({
         error: "Non-JSON response from Canvas. Probably invalid token or domain.",
-        raw: text 
+        raw: text
       });
     }
-
   } catch (err) {
     res.status(500).json({ error: "Fetch failed: " + err.message });
   }
-}
+}]\[
+=
