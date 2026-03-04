@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,8 +57,6 @@ input { width:100%; padding:12px; margin:8px 0 16px; border-radius:8px; border:1
 let canvasDomain = "";
 let canvasToken = "";
 
-const corsProxy = "https://corsproxy.io/?"; // you can replace with another CORS proxy
-
 const query = `
 query MyQuery {
   allCourses {
@@ -97,14 +96,11 @@ async function fetchData() {
   container.innerHTML = "Loading...";
 
   try {
-    const url = `${corsProxy}https://${canvasDomain}/api/graphql`;
-    const res = await fetch(url, {
+    // Use Vercel serverless proxy
+    const res = await fetch("/api/proxy", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${canvasToken}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ query })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ domain: canvasDomain, token: canvasToken, query })
     });
 
     const data = await res.json();
