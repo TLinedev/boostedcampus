@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BoostedCampus Dashboard</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59,130,246,0.4);
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+}
+
+* { box-sizing: border-box; }
+body { margin:0; font-family: Inter, sans-serif; background: var(--bg); color: var(--text); }
+header { padding: 20px 30px; background: #0b1220; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
+h1 { margin:0; font-size:22px; letter-spacing:0.5px; }
+button { background: var(--accent); border:none; padding:10px 16px; border-radius:8px; color:white; font-weight:600; cursor:pointer; box-shadow:0 0 15px var(--accent-glow); transition:.2s; }
+button:hover { transform: translateY(-2px); }
+.container { padding:30px; display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
+.card { background: var(--card); border-radius:16px; padding:20px; box-shadow:0 0 0 1px #243041; transition:.2s; }
+.card:hover { box-shadow:0 0 20px var(--accent-glow); transform: translateY(-3px); }
+.course-title { font-size:18px; font-weight:700; margin-bottom:10px; }
+.grade { font-size:28px; font-weight:800; margin:10px 0; }
+.assignment-group { margin-top:12px; padding:10px; background:#111827; border-radius:10px; font-size:14px; }
+.muted { color: var(--muted); font-size:13px; }
+.login-screen { position: fixed; inset:0; background:#0f172a; display:flex; justify-content:center; align-items:center; }
+.login-box { background: var(--card); padding:40px; border-radius:16px; width:400px; box-shadow:0 0 25px rgba(0,0,0,0.4); }
+input { width:100%; padding:12px; margin:8px 0 16px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:white; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚀 BoostedCampus</h1>
+  <button onclick="refreshData()">Refresh</button>
+</header>
+
+<div class="container" id="courses"></div>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h2>Connect to Canvas</h2>
+    <label>Canvas Domain</label>
+    <input id="domain" placeholder="yourschool.instructure.com" />
+    <label>Access Token</label>
+    <input id="token" type="password" placeholder="Paste Canvas API Token" />
+    <button onclick="connect()">Connect</button>
+  </div>
+</div>
+
+<script>
+let canvasDomain = "";
+let canvasToken = "";
+
+const corsProxy = "https://corsproxy.io/?"; // you can replace with another CORS proxy
+
+const query = `
+query MyQuery {
+  allCourses {
+    name
+    imageUrl
+    assignmentGroups {
+      name
+      position
+      state
+      gradesConnection {
+        edges {
+          node {
+            currentGrade
+            currentScore
+            unpostedCurrentGrade
+            unpostedCurrentScore
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+function connect() {
+  canvasDomain = document.getElementById("domain").value.trim();
+  canvasToken = document.getElementById("token").value.trim();
+  if (!canvasDomain || !canvasToken) { alert("Enter domain and token."); return; }
+  document.getElementById("loginScreen").style.display = "none";
+  fetchData();
+}
+
+function refreshData() { fetchData(); }
+
+async function fetchData() {
+  const container = document.getElementById("courses");
+  container.innerHTML = "Loading...";
+
+  try {
+    const url = `${corsProxy}https://${canvasDomain}/api/graphql`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${canvasToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ query })
+    });
+
+    const data = await res.json();
+    if(data.errors) {
+      container.innerHTML = "GraphQL Error: " + data.errors[0].message;
+      return;
+    }
+    renderCourses(data.data.allCourses);
+  } catch(err) {
+    container.innerHTML = "Network/CORS Error: " + err.message;
+    console.error(err);
+  }
+}
+
+function renderCourses(courses) {
+  const container = document.getElementById("courses");
+  container.innerHTML = "";
+
+  courses.forEach(course => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("div");
+    title.className = "course-title";
+    title.textContent = course.name;
+    card.appendChild(title);
+
+    let displayedGrade = "N/A";
+    if(course.assignmentGroups?.length) {
+      const gradeNode = course.assignmentGroups[0]?.gradesConnection?.edges[0]?.node;
+      if(gradeNode?.currentGrade) displayedGrade = gradeNode.currentGrade + "%";
+    }
+
+    const grade = document.createElement("div");
+    grade.className = "grade";
+    grade.textContent = displayedGrade;
+    card.appendChild(grade);
+
+    course.assignmentGroups.forEach(group => {
+      const groupDiv = document.createElement("div");
+      groupDiv.className = "assignment-group";
+      groupDiv.innerHTML = `<strong>${group.name}</strong><br/><span class="muted">State: ${group.state}</span>`;
+      card.appendChild(groupDiv);
+    });
+
+    container.appendChild(card);
+  });
+}
+</script>
+
+</body>
+</html>
