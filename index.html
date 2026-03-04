@@ -1,61 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BoostedCampus Dashboard</title>
+<meta charset="UTF-8">
+<title>🚀 BoostedCampus</title>
 <style>
-:root {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --accent: #3b82f6;
-  --accent-glow: rgba(59,130,246,0.4);
-  --text: #e2e8f0;
-  --muted: #94a3b8;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
 }
 
-* { box-sizing: border-box; }
-body { margin:0; font-family: Inter, sans-serif; background: var(--bg); color: var(--text); }
-header { padding: 20px 30px; background: #0b1220; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
-h1 { margin:0; font-size:22px; letter-spacing:0.5px; }
-button { background: var(--accent); border:none; padding:10px 16px; border-radius:8px; color:white; font-weight:600; cursor:pointer; box-shadow:0 0 15px var(--accent-glow); transition:.2s; }
-button:hover { transform: translateY(-2px); }
-.container { padding:30px; display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
-.card { background: var(--card); border-radius:16px; padding:20px; box-shadow:0 0 0 1px #243041; transition:.2s; }
-.card:hover { box-shadow:0 0 20px var(--accent-glow); transform: translateY(-3px); }
-.course-title { font-size:18px; font-weight:700; margin-bottom:10px; }
-.grade { font-size:28px; font-weight:800; margin:10px 0; }
-.assignment-group { margin-top:12px; padding:10px; background:#111827; border-radius:10px; font-size:14px; }
-.muted { color: var(--muted); font-size:13px; }
-.login-screen { position: fixed; inset:0; background:#0f172a; display:flex; justify-content:center; align-items:center; }
-.login-box { background: var(--card); padding:40px; border-radius:16px; width:400px; box-shadow:0 0 25px rgba(0,0,0,0.4); }
-input, select { width:100%; padding:12px; margin:8px 0 16px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:white; }
+header {
+  background: #1e293b;
+  padding: 15px 25px;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button {
+  background: #3b82f6;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: none;
+}
+
+.container {
+  padding: 25px;
+}
+
+.login-box {
+  max-width: 400px;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 40px auto;
+}
+
+.filter-box {
+  max-width: 250px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.course-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.grade {
+  font-size: 28px;
+  margin: 10px 0;
+}
+
+.assignment-group {
+  font-size: 13px;
+  margin-top: 6px;
+  opacity: 0.8;
+}
+
+.hidden {
+  display: none;
+}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🚀 BoostedCampus</h1>
-  <button onclick="refreshData()">Refresh</button>
+  🚀 BoostedCampus
+  <button onclick="fetchData()">Refresh</button>
 </header>
 
-<div class="container" id="courses"></div>
+<div class="container">
 
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <h2>Connect to Canvas</h2>
-    <label>Canvas Domain</label>
-    <input id="domain" placeholder="yourschool.instructure.com" />
-    <label>Access Token</label>
-    <input id="token" type="password" placeholder="Paste Canvas API Token" />
+  <!-- LOGIN -->
+  <div class="login-box" id="loginBox">
+    <label>Canvas URL</label>
+    <input id="canvasUrl" placeholder="https://school.instructure.com">
+
+    <label>Canvas API Key</label>
+    <input id="canvasToken" type="password" placeholder="Paste your API token">
+
+    <button onclick="connect()">Connect</button>
+  </div>
+
+  <!-- FILTER (hidden until connected) -->
+  <div class="filter-box hidden" id="filterBox">
     <label>Show Courses</label>
     <select id="statusFilter">
       <option value="all">All Courses</option>
       <option value="active">Active Courses</option>
       <option value="old">Old Courses</option>
     </select>
-    <button onclick="connect()">Connect</button>
   </div>
+
+  <!-- COURSES -->
+  <div class="grid" id="courses"></div>
+
 </div>
 
 <script>
@@ -63,112 +133,111 @@ let canvasDomain = "";
 let canvasToken = "";
 let cachedCourses = [];
 
-const query = `
-query MyQuery {
-  allCourses {
-    name
-    imageUrl
-    assignmentGroups {
+async function connect() {
+  canvasDomain = document.getElementById("canvasUrl").value.trim();
+  canvasToken = document.getElementById("canvasToken").value.trim();
+
+  if (!canvasDomain || !canvasToken) {
+    alert("Enter Canvas URL and API Key.");
+    return;
+  }
+
+  await fetchData();
+
+  // Hide login + show filter after successful connect
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("filterBox").classList.remove("hidden");
+}
+
+async function fetchData() {
+  if (!canvasDomain || !canvasToken) return;
+
+  const query = `
+  query {
+    allCourses {
       name
-      position
-      state
-      gradesConnection {
-        edges {
-          node {
-            currentGrade
-            currentScore
-            unpostedCurrentGrade
-            unpostedCurrentScore
+      assignmentGroups {
+        name
+        state
+        gradesConnection {
+          edges {
+            node {
+              currentGrade
+            }
           }
         }
       }
     }
-  }
-}
-`;
-
-function connect() {
-  canvasDomain = document.getElementById("domain").value.trim();
-  canvasToken = document.getElementById("token").value.trim();
-  if (!canvasDomain || !canvasToken) { alert("Enter domain and token."); return; }
-  document.getElementById("loginScreen").style.display = "none";
-  fetchData();
-}
-
-function refreshData() { fetchData(); }
-
-async function fetchData() {
-  const container = document.getElementById("courses");
-  container.innerHTML = "Loading...";
+  }`;
 
   try {
-    const res = await fetch("/api/proxy", {
+    const response = await fetch("/api/proxy", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ domain: canvasDomain, token: canvasToken, query })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        canvasDomain,
+        canvasToken,
+        query
+      })
     });
 
-    const data = await res.json();
-    if(data.errors) {
-      container.innerHTML = "GraphQL Error: " + data.errors[0].message;
+    const data = await response.json();
+
+    if (data.errors) {
+      alert("Canvas Error: " + data.errors[0].message);
       return;
     }
 
     cachedCourses = data.data.allCourses;
-    renderCourses(cachedCourses);
-  } catch(err) {
-    container.innerHTML = "Network/CORS Error: " + err.message;
-    console.error(err);
+    renderCourses();
+
+  } catch (err) {
+    alert("Network/CORS Error: " + err.message);
   }
 }
 
-function renderCourses(courses) {
+function renderCourses() {
   const container = document.getElementById("courses");
   container.innerHTML = "";
 
-  const filter = document.getElementById("statusFilter")?.value || "all";
+  const filter = document.getElementById("statusFilter").value;
 
-  courses
-    .filter(course => {
-      if(filter === "active") return course.assignmentGroups?.some(g => g.state === "active");
-      if(filter === "old") return course.assignmentGroups?.every(g => g.state !== "active");
-      return true;
-    })
-    .forEach(course => {
-      const card = document.createElement("div");
-      card.className = "card";
+  const filtered = cachedCourses.filter(course => {
+    const hasActive = course.assignmentGroups?.some(g => g.state === "active");
+    if (filter === "active") return hasActive;
+    if (filter === "old") return !hasActive;
+    return true;
+  });
 
-      const title = document.createElement("div");
-      title.className = "course-title";
-      title.textContent = course.name;
-      card.appendChild(title);
+  filtered.forEach(course => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-      let displayedGrade = "N/A";
-      if(course.assignmentGroups?.length) {
-        const gradeNode = course.assignmentGroups[0]?.gradesConnection?.edges[0]?.node;
-        if(gradeNode?.currentGrade) displayedGrade = gradeNode.currentGrade + "%";
+    const title = document.createElement("div");
+    title.className = "course-title";
+    title.textContent = course.name;
+    card.appendChild(title);
+
+    let gradeText = "N/A";
+    if (course.assignmentGroups?.length) {
+      const gradeNode = course.assignmentGroups[0]?.gradesConnection?.edges[0]?.node;
+      if (gradeNode?.currentGrade) {
+        gradeText = gradeNode.currentGrade + "%";
       }
+    }
 
-      const grade = document.createElement("div");
-      grade.className = "grade";
-      grade.textContent = displayedGrade;
-      card.appendChild(grade);
+    const grade = document.createElement("div");
+    grade.className = "grade";
+    grade.textContent = gradeText;
+    card.appendChild(grade);
 
-      course.assignmentGroups.forEach(group => {
-        const groupDiv = document.createElement("div");
-        groupDiv.className = "assignment-group";
-        groupDiv.innerHTML = `<strong>${group.name}</strong><br/><span class="muted">State: ${group.state}</span>`;
-        card.appendChild(groupDiv);
-      });
-
-      container.appendChild(card);
-    });
+    container.appendChild(card);
+  });
 }
 
-// Re-render on filter change without re-fetching
-document.getElementById("statusFilter")?.addEventListener("change", () => {
-  if(cachedCourses.length) renderCourses(cachedCourses);
-});
+document.getElementById("statusFilter").addEventListener("change", renderCourses);
 </script>
 
 </body>
