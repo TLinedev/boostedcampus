@@ -1,0 +1,99 @@
+@font-face {
+  font-family: 'OpenSans';
+  src: url('./assets/fonts/OpenSans-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    font-family: OpenSans, sans-serif;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #4a6278;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #4a6278;
+}
+
+/* Container Styles */
+.container {
+    margin-left: 250px;
+    padding: 50px;
+    flex: 1;
+    background-color: #f5f5f5;
+}
+
+/* Classcard Styles */
+.classcard {
+    background-color: lightblue;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.classcard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 170px;
+    background-color: blue;
+    border-radius: 50% 50% 0 0;
+}
+
+.classname {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: OpenSans;
+    font-size: 24px;
+    background-color: lightblue;
+    height: 80px;
+    line-height: 100px;
+    color: #333;
+}
