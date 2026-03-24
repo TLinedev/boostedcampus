@@ -1,8 +1,8 @@
 @font-face {
-  font-family: 'OpenSans';
-  src: url('./assets/fonts/OpenSans-SemiBold.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'OpenSans';
+    src: url('./assets/fonts/OpenSans-SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 * {
@@ -11,21 +11,231 @@
     padding: 0;
 }
 
+/* Theme Variables - Default (Light) */
+:root {
+    --sidebar-bg: #2c3e50;
+    --sidebar-hover: #4a6278;
+    --sidebar-text: white;
+    --container-bg: #f5f5f5;
+    --card-bg: lightblue;
+    --card-top: blue;
+    --text-color: #333;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --sidebar-bg: #1a1a2e;
+    --sidebar-hover: #16213e;
+    --sidebar-text: #eee;
+    --container-bg: #0f0f1a;
+    --card-bg: #2d2d44;
+    --card-top: #4a4a6a;
+    --text-color: #fff;
+}
+
+/* Ocean Theme */
+[data-theme="blue"] {
+    --sidebar-bg: #006994;
+    --sidebar-hover: #0077a3;
+    --sidebar-text: white;
+    --container-bg: #e0f4f5;
+    --card-bg: #87ceeb;
+    --card-top: #4682b4;
+    --text-color: #003366;
+}
+
+/* Purple Theme */
+[data-theme="purple"] {
+    --sidebar-bg: #4a266a;
+    --sidebar-hover: #6b3a8a;
+    --sidebar-text: white;
+    --container-bg: #f5e6ff;
+    --card-bg: #d8b4e2;
+    --card-top: #9b59b6;
+    --text-color: #2d1a3d;
+}
+
+/* ============================================
+   CATPPUCCIN PLUS THEMES (Official Colors)
+   Source: https://catppuccin.com/palette/
+   ============================================ */
+
+/* Catppuccin Latte (Light) - Red/Maroon Accent */
+[data-theme="ctp-latte"] {
+    --sidebar-bg: #d20f39;
+    --sidebar-hover: #e64553;
+    --sidebar-text: #eff1f5;
+    --container-bg: #eff1f5;
+    --card-bg: #ccd0da;
+    --card-top: #dc8a78;
+    --text-color: #4c4f69;
+    
+    /* Catppuccin Latte Official Palette */
+    --ctp-rosewater: #dc8a78;
+    --ctp-flamingo: #dd7878;
+    --ctp-pink: #ea76cb;
+    --ctp-mauve: #8839ef;
+    --ctp-red: #d20f39;
+    --ctp-maroon: #e64553;
+    --ctp-peach: #fe640b;
+    --ctp-yellow: #df8e1d;
+    --ctp-green: #40a02b;
+    --ctp-teal: #179299;
+    --ctp-sky: #04a5e5;
+    --ctp-sapphire: #209fb5;
+    --ctp-blue: #1e66f5;
+    --ctp-lavender: #7287fd;
+    --ctp-text: #4c4f69;
+    --ctp-subtext1: #5c5f77;
+    --ctp-subtext0: #6c6f85;
+    --ctp-overlay2: #7c7f93;
+    --ctp-overlay1: #8c8fa1;
+    --ctp-overlay0: #9ca0b0;
+    --ctp-surface2: #acb0be;
+    --ctp-surface1: #bcc0cc;
+    --ctp-surface0: #ccd0da;
+    --ctp-base: #eff1f5;
+    --ctp-mantle: #e6e9ef;
+    --ctp-crust: #dce0e8;
+}
+
+/* Catppuccin Frappé - Teal/Sapphire Accent */
+[data-theme="ctp-frappe"] {
+    --sidebar-bg: #179299;
+    --sidebar-hover: #81c8be;
+    --sidebar-text: #232634;
+    --container-bg: #292c3c;
+    --card-bg: #51576d;
+    --card-top: #85c1dc;
+    --text-color: #c6d0f5;
+    
+    /* Catppuccin Frappé Official Palette */
+    --ctp-rosewater: #f2d5cf;
+    --ctp-flamingo: #eebebe;
+    --ctp-pink: #f4b8e4;
+    --ctp-mauve: #ca9ee6;
+    --ctp-red: #e78284;
+    --ctp-maroon: #ea999c;
+    --ctp-peach: #ef9f76;
+    --ctp-yellow: #e5c890;
+    --ctp-green: #a6d189;
+    --ctp-teal: #81c8be;
+    --ctp-sky: #99d1db;
+    --ctp-sapphire: #85c1dc;
+    --ctp-blue: #8caaee;
+    --ctp-lavender: #babbf1;
+    --ctp-text: #c6d0f5;
+    --ctp-subtext1: #b5bfe2;
+    --ctp-subtext0: #a5adce;
+    --ctp-overlay2: #949cbb;
+    --ctp-overlay1: #838ba7;
+    --ctp-overlay0: #737994;
+    --ctp-surface2: #626880;
+    --ctp-surface1: #51576d;
+    --ctp-surface0: #414559;
+    --ctp-base: #303446;
+    --ctp-mantle: #292c3c;
+    --ctp-crust: #232634;
+}
+
+/* Catppuccin Macchiato - Green Accent */
+[data-theme="ctp-macchiato"] {
+    --sidebar-bg: #a6da95;
+    --sidebar-hover: #8bd5ca;
+    --sidebar-text: #181926;
+    --container-bg: #1e2030;
+    --card-bg: #494d64;
+    --card-top: #8bd5ca;
+    --text-color: #cad3f5;
+    
+    /* Catppuccin Macchiato Official Palette */
+    --ctp-rosewater: #f4dbd6;
+    --ctp-flamingo: #f0c6c6;
+    --ctp-pink: #f5bde6;
+    --ctp-mauve: #c6a0f6;
+    --ctp-red: #ed8796;
+    --ctp-maroon: #ee99a0;
+    --ctp-peach: #f5a97f;
+    --ctp-yellow: #eed49f;
+    --ctp-green: #a6da95;
+    --ctp-teal: #8bd5ca;
+    --ctp-sky: #91d7e3;
+    --ctp-sapphire: #7dc4e4;
+    --ctp-blue: #8aadf4;
+    --ctp-lavender: #b7bdf8;
+    --ctp-text: #cad3f5;
+    --ctp-subtext1: #b8c0e0;
+    --ctp-subtext0: #a5adcb;
+    --ctp-overlay2: #939ab7;
+    --ctp-overlay1: #8087a2;
+    --ctp-overlay0: #6e738d;
+    --ctp-surface2: #5b6078;
+    --ctp-surface1: #494d64;
+    --ctp-surface0: #363a4f;
+    --ctp-base: #24273a;
+    --ctp-mantle: #1e2030;
+    --ctp-crust: #181926;
+}
+
+/* Catppuccin Mocha - Blue/Lavender Accent */
+[data-theme="ctp-mocha"] {
+    --sidebar-bg: #89b4fa;
+    --sidebar-hover: #b4befe;
+    --sidebar-text: #11111b;
+    --container-bg: #181825;
+    --card-bg: #45475a;
+    --card-top: #cba6f7;
+    --text-color: #cdd6f4;
+    
+    /* Catppuccin Mocha Official Palette */
+    --ctp-rosewater: #f5e0dc;
+    --ctp-flamingo: #f2cdcd;
+    --ctp-pink: #f5c2e7;
+    --ctp-mauve: #cba6f7;
+    --ctp-red: #f38ba8;
+    --ctp-maroon: #eba0ac;
+    --ctp-peach: #fab387;
+    --ctp-yellow: #f9e2af;
+    --ctp-green: #a6e3a1;
+    --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb;
+    --ctp-sapphire: #74c7ec;
+    --ctp-blue: #89b4fa;
+    --ctp-lavender: #b4befe;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext1: #bac2de;
+    --ctp-subtext0: #a6adc8;
+    --ctp-overlay2: #9399b2;
+    --ctp-overlay1: #7f849c;
+    --ctp-overlay0: #6c7086;
+    --ctp-surface2: #585b70;
+    --ctp-surface1: #45475a;
+    --ctp-surface0: #313244;
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+}
+
 body {
     display: flex;
     min-height: 100vh;
     font-family: OpenSans, sans-serif;
+    background-color: var(--container-bg);
+    transition: background-color 0.3s ease;
 }
 
+/* Sidebar Styles */
 .sidebar {
     width: 250px;
-    background-color: #2c3e50;
-    color: white;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
     padding: 20px;
     display: flex;
     flex-direction: column;
     position: fixed;
     height: 100vh;
+    transition: background-color 0.3s ease;
+    z-index: 50;
 }
 
 .logo {
@@ -33,7 +243,7 @@ body {
     font-weight: bold;
     margin-bottom: 40px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #4a6278;
+    border-bottom: 1px solid var(--sidebar-hover);
 }
 
 nav {
@@ -43,7 +253,7 @@ nav {
 }
 
 .nav-link {
-    color: white;
+    color: var(--sidebar-text);
     text-decoration: none;
     padding: 15px;
     border-radius: 8px;
@@ -51,23 +261,604 @@ nav {
 }
 
 .nav-link:hover {
-    background-color: #4a6278;
+    background-color: var(--sidebar-hover);
 }
 
+/* Settings Menu Overlay */
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.settings-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Settings Menu */
+.settings-menu {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 450px;
+    max-width: 100%;
+    height: 100vh;
+    background-color: white;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 101;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
+
+.settings-menu.active {
+    right: 0;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+}
+
+.settings-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    color: var(--sidebar-text);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.2s;
+}
+
+.close-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Settings Tabs */
+.settings-tabs {
+    display: flex;
+    border-bottom: 2px solid #eee;
+    background-color: #f8f9fa;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-btn:hover {
+    color: #333;
+    background-color: #f0f0f0;
+}
+
+.tab-btn.active {
+    color: #1e1e2e;
+    background-color: white;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #cba6f7, #f5c2e7);
+}
+
+.premium-badge {
+    background: linear-gradient(135deg, #cba6f7, #f5c2e7);
+    color: #1e1e2e;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.settings-content {
+    padding: 25px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.settings-section {
+    margin-bottom: 30px;
+}
+
+.settings-section h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+/* Catppuccin Header */
+.catppuccin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #1e1e2e, #313244);
+    border-radius: 12px;
+    color: #cdd6f4;
+}
+
+.catppuccin-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.catppuccin-icon svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.catppuccin-logo h3 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: #cdd6f4;
+    font-size: 20px;
+}
+
+.catppuccin-logo p {
+    margin: 4px 0 0 0;
+    font-size: 12px;
+    color: #a6adc8;
+    font-style: italic;
+}
+
+.unlock-all-btn {
+    background: linear-gradient(135deg, #cba6f7, #f5c2e7);
+    color: #1e1e2e;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+
+.unlock-all-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(203, 166, 247, 0.5);
+}
+
+/* Theme Options */
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.theme-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.theme-btn:hover {
+    border-color: #999;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-btn.active {
+    border-color: #cba6f7;
+    box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.3);
+}
+
+.theme-preview {
+    width: 80px;
+    height: 50px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+
+/* Free Theme Previews */
+.light-preview {
+    background: linear-gradient(to right, #2c3e50 30%, #f5f5f5 30%);
+}
+
+.dark-preview {
+    background: linear-gradient(to right, #1a1a2e 30%, #0f0f1a 30%);
+}
+
+.blue-preview {
+    background: linear-gradient(to right, #006994 30%, #e0f4f5 30%);
+}
+
+.purple-preview {
+    background: linear-gradient(to right, #4a266a 30%, #f5e6ff 30%);
+}
+
+/* Catppuccin Theme Previews - Updated with distinct accent colors */
+
+/* Latte - Red sidebar, light background */
+.ctp-latte-preview {
+    background: #eff1f5;
+    position: relative;
+}
+
+.ctp-latte-preview::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background: #d20f39;
+}
+
+.ctp-latte-preview::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 30px;
+    height: 5px;
+    background: linear-gradient(90deg, #d20f39, #fe640b, #df8e1d);
+    border-radius: 3px;
+}
+
+/* Frappé - Teal sidebar, dark background */
+.ctp-frappe-preview {
+    background: #292c3c;
+    position: relative;
+}
+
+.ctp-frappe-preview::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background: #179299;
+}
+
+.ctp-frappe-preview::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 30px;
+    height: 5px;
+    background: linear-gradient(90deg, #179299, #81c8be, #85c1dc);
+    border-radius: 3px;
+}
+
+/* Macchiato - Green sidebar, darker background */
+.ctp-macchiato-preview {
+    background: #1e2030;
+    position: relative;
+}
+
+.ctp-macchiato-preview::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background: #a6da95;
+}
+
+.ctp-macchiato-preview::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 30px;
+    height: 5px;
+    background: linear-gradient(90deg, #a6da95, #8bd5ca, #91d7e3);
+    border-radius: 3px;
+}
+
+/* Mocha - Blue sidebar, darkest background */
+.ctp-mocha-preview {
+    background: #181825;
+    position: relative;
+}
+
+.ctp-mocha-preview::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background: #89b4fa;
+}
+
+.ctp-mocha-preview::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 30px;
+    height: 5px;
+    background: linear-gradient(90deg, #89b4fa, #b4befe, #cba6f7);
+    border-radius: 3px;
+}
+
+.theme-btn span:nth-child(3) {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Flavor Description */
+.flavor-desc {
+    font-size: 11px !important;
+    color: #888 !important;
+    font-weight: normal !important;
+}
+
+/* Paid Theme Styles */
+.paid-theme {
+    position: relative;
+    overflow: visible;
+    background: linear-gradient(135deg, #fafafa, #f5f5f5);
+}
+
+.lock-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    background: linear-gradient(135deg, #1e1e2e, #313244);
+    color: #cdd6f4;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.paid-theme.unlocked .lock-icon {
+    background: linear-gradient(135deg, #a6e3a1, #94e2d5);
+    color: #1e1e2e;
+}
+
+.price-tag {
+    background: linear-gradient(135deg, #cba6f7, #f5c2e7);
+    color: #1e1e2e;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(203, 166, 247, 0.3);
+}
+
+.paid-theme.unlocked .price-tag {
+    background: linear-gradient(135deg, #a6e3a1, #94e2d5);
+}
+
+.paid-theme:hover {
+    border-color: #cba6f7;
+}
+
+.paid-theme.unlocked:hover {
+    border-color: #a6e3a1;
+}
+
+/* Purchase Modal */
+.purchase-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(17, 17, 27, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.purchase-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.purchase-modal-content {
+    background: linear-gradient(135deg, #1e1e2e, #313244);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+    border: 2px solid #45475a;
+    color: #cdd6f4;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.purchase-modal.active .purchase-modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #6c7086;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #cdd6f4;
+}
+
+.modal-icon {
+    margin-bottom: 20px;
+}
+
+.modal-icon svg {
+    filter: drop-shadow(0 4px 12px rgba(203, 166, 247, 0.4));
+}
+
+.purchase-modal-content h3 {
+    font-size: 26px;
+    color: #cdd6f4;
+    margin-bottom: 15px;
+}
+
+.modal-price {
+    font-size: 32px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #cba6f7, #f5c2e7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+}
+
+.modal-description {
+    color: #a6adc8;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background: #45475a;
+    color: #cdd6f4;
+}
+
+.cancel-btn:hover {
+    background: #585b70;
+}
+
+.purchase-btn {
+    background: linear-gradient(135deg, #a6e3a1, #94e2d5);
+    color: #1e1e2e;
+}
+
+.purchase-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(166, 227, 161, 0.5);
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #a6e3a1, #94e2d5);
+    color: #1e1e2e;
+    padding: 16px 35px;
+    border-radius: 30px;
+    font-weight: bold;
+    box-shadow: 0 8px 24px rgba(166, 227, 161, 0.4);
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Container Styles */
 .container {
     margin-left: 250px;
     padding: 50px;
     flex: 1;
-    background-color: #f5f5f5;
+    background-color: var(--container-bg);
+    transition: background-color 0.3s ease;
 }
 
+/* Classcard Styles */
 .classcard {
-    background-color: lightblue;
+    background-color: var(--card-bg);
     width: 250px;
     height: 250px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
 }
 
 .classcard::before {
@@ -77,8 +868,9 @@ nav {
     left: 0;
     right: 0;
     height: 170px;
-    background-color: blue;
+    background-color: var(--card-top);
     border-radius: 50% 50% 0 0;
+    transition: background-color 0.3s ease;
 }
 
 .classname {
@@ -89,8 +881,9 @@ nav {
     text-align: center;
     font-family: OpenSans;
     font-size: 24px;
-    background-color: lightblue;
+    background-color: var(--card-bg);
     height: 80px;
     line-height: 100px;
-    color: #333;
+    color: var(--text-color);
+    transition: all 0.3s ease;
 }
